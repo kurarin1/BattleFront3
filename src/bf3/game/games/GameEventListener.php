@@ -6,6 +6,7 @@ use bf3\game\GameManager;
 use pocketmine\event\entity\EntityArmorChangeEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 
 abstract class GameEventListener
 {
@@ -21,5 +22,7 @@ abstract class GameEventListener
     public function onPlayerDeath(PlayerDeathEvent $event){}
 
     public function onDamage(EntityDamageEvent $event){}
+
+    public function onRespawn(PlayerRespawnEvent $event){}
 
 }

@@ -10,6 +10,7 @@ use pocketmine\utils\Color;
 abstract class TDMMap
 {
     const MAP_ID = "";
+    const MAP_NAME = "";
     const LEVEL_NAME = "";
 
     const LOCK_TIME = false;
@@ -65,6 +66,18 @@ abstract class TDMMap
     public function getTeamRGB(int $team) : Color{
         $data = static::TEAM_RGB[$team];
         return new Color($data[0], $data[1], $data[2]);
+    }
+
+    public function getMapName() : string {
+        return static::MAP_NAME;
+    }
+
+    public function getLevel(){
+        return $this->level;
+    }
+
+    public function close(){
+        Server::getInstance()->unloadLevel($this->level);
     }
 
 

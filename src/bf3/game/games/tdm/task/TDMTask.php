@@ -8,7 +8,8 @@ use pocketmine\scheduler\Task;
 abstract class TDMTask extends Task
 {
 
-    private $game;
+    /* @var $game TeamDeathMatch*/
+    protected $game;
 
     public function __construct(TeamDeathMatch $tdm){
         $this->game = $tdm;

@@ -6,6 +6,7 @@ class TDMHightower extends TDMMap
 {
 
     const MAP_ID = "hightower";
+    const MAP_NAME = "HighTower";
     const LEVEL_NAME = "Hightower";
 
     const LOCK_TIME = true;

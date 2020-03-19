@@ -7,6 +7,8 @@ use bf3\game\GameManager;
 use bf3\game\games\Game;
 use bf3\game\games\tdm\map\TDMHightower;
 use bf3\game\games\tdm\map\TDMMap;
+use bf3\game\games\tdm\task\TDMGameTask;
+use bf3\game\games\tdm\task\TDMResultTask;
 use bfguns\BFGuns;
 use dummyapi\dummy\Dummy;
 use dummyapi\DummyAPI;
@@ -29,6 +31,10 @@ class TeamDeathMatch extends Game
     const MIN_PLAYER = 1;
 
     const HP = 100;
+
+    const TIME = 10;//10分
+
+    const MAX_KILL = 1;
 
     /* @var $maps string[]*/
     private static $maps = [
@@ -58,12 +64,20 @@ class TeamDeathMatch extends Game
 
     public function init(){
         $this->map = new self::$maps[array_rand(self::$maps)]();//マップ選択
+        $this->map->getLevel()->setAutoSave(false);
         parent::init();
         $this->TimeTable();
     }
 
     public function fin(){
-
+        foreach ($this->players as $player){
+            unset($this->players[$player->getName()]);
+            BattleFront3::getInstance()->gotoHub($player);
+            BattleFront3::getInstance()->setHubHealth($player);
+            BattleFront3::getInstance()->setHubInventory($player);
+            BattleFront3::getInstance()->setHubSpawn($player);
+        }
+        $this->map->close();
     }
 
     public function TimeTable(){
@@ -72,6 +86,19 @@ class TeamDeathMatch extends Game
         switch($this->TimeTableStatus){
 
             case 0:
+                $this->broadcastTitle("§l§cGame Start!!§r", $this->map->getMapName(), 5, 20, 20);
+                $this->broadcastSound("random.totem");
+                BattleFront3::getInstance()->getScheduler()->scheduleRepeatingTask(new TDMGameTask($this), 20);
+                break;
+
+            case 1:
+                $this->broadcastTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
+                $this->broadcastSound("random.totem", 1.5);
+                BattleFront3::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new TDMResultTask($this), 30, 20);
+                break;
+
+            case 2:
+                $this->close();
                 break;
 
         }
@@ -84,6 +111,7 @@ class TeamDeathMatch extends Game
         else{//新規参加
             $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
             $this->teamIndex[$player->getName()] = $team;
+            $this->players[$player->getName()] = $player;
         }
         $this->teamMembers[$team][$player->getName()] = $player;
 
@@ -110,9 +138,29 @@ class TeamDeathMatch extends Game
 
     public function addKillPoint(int $team, int $amount = 1){
         $this->killPoint[$team] += $amount;
+        if($this->killPoint[$team] >= self::MAX_KILL && $this->TimeTableStatus === 0){
+            $this->TimeTable();
+        }
+    }
+
+    public function getKillPoint(int $team){
+        return $this->killPoint[$team];
     }
 
     public function getTeam(Player $player){
         return $this->teamIndex[$player->getName()];
+    }
+
+    public function getTimeTableStatus(){
+        return $this->TimeTableStatus;
+    }
+
+    public function getMap() : TDMMap{
+        return $this->map;
+    }
+
+    /* @return Player[]*/
+    public function getTeamPlayers(int $team) : array {
+        return $this->teamMembers[$team];
     }
 }

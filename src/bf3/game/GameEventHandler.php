@@ -6,6 +6,7 @@ use pocketmine\event\entity\EntityArmorChangeEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 
 class GameEventHandler implements Listener{
 
@@ -36,6 +37,16 @@ class GameEventHandler implements Listener{
     public function onDamage(EntityDamageEvent $event){
         if(GameManager::isGaming()){
             GameManager::getGame()->getEventListener()->onDamage($event);
+        }
+    }
+
+    /**
+     * @priority LOW
+     * @param PlayerRespawnEvent $event
+     */
+    public function onRespawn(PlayerRespawnEvent $event){
+        if(GameManager::isGaming()){
+            GameManager::getGame()->getEventListener()->onRespawn($event);
         }
     }
 
