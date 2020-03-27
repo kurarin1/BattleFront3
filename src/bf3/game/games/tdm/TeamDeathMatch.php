@@ -5,11 +5,15 @@ namespace bf3\game\games\tdm;
 use bf3\BattleFront3;
 use bf3\game\GameManager;
 use bf3\game\games\Game;
+use bf3\game\games\tdm\bossbar\TDMBossBar;
 use bf3\game\games\tdm\map\TDMHightower;
 use bf3\game\games\tdm\map\TDMMap;
+use bf3\game\games\tdm\scoreboard\TDMScoreboard;
 use bf3\game\games\tdm\task\TDMGameTask;
 use bf3\game\games\tdm\task\TDMResultTask;
 use bfguns\BFGuns;
+use bossbarapi\bossbar\BossBar;
+use bossbarapi\BossBarAPI;
 use dummyapi\dummy\Dummy;
 use dummyapi\DummyAPI;
 use pocketmine\event\player\PlayerItemHeldEvent;
@@ -20,6 +24,7 @@ use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\UUID;
+use scoreboardapi\scoreboard\Scoreboard;
 
 class TeamDeathMatch extends Game
 {
@@ -32,7 +37,7 @@ class TeamDeathMatch extends Game
 
     const HP = 100;
 
-    const TIME = 10;//10分
+    const TIME = 60 * 1;
 
     const MAX_KILL = 1;
 
@@ -72,9 +77,14 @@ class TeamDeathMatch extends Game
     public function fin(){
         foreach ($this->players as $player){
             unset($this->players[$player->getName()]);
+            $player->removeAllEffects();
+            BattleFront3::getInstance()->setHubBossBar($player);
+            BattleFront3::getInstance()->setHubScoreboard($player);
             BattleFront3::getInstance()->gotoHub($player);
             BattleFront3::getInstance()->setHubHealth($player);
+            BattleFront3::getInstance()->setHubFood($player);
             BattleFront3::getInstance()->setHubInventory($player);
+            BattleFront3::getInstance()->setHubNameTags($player);
             BattleFront3::getInstance()->setHubSpawn($player);
         }
         $this->map->close();
@@ -115,6 +125,9 @@ class TeamDeathMatch extends Game
         }
         $this->teamMembers[$team][$player->getName()] = $player;
 
+        TDMBossBar::create($player);
+        TDMScoreboard::create($player);
+
         $player->setGamemode(Player::SURVIVAL);
         $player->teleport($this->map->getSpawnLocation($team));
         $player->setSpawn($this->map->getSpawnLocation($team));
@@ -134,6 +147,10 @@ class TeamDeathMatch extends Game
         $player->getInventory()->addItem($gun);
 
         $player->sendMessage("§l§aGAME>>§r§fあなたは" . $this->map->getColoredTeamName($team) . "チームです、敵を殲滅してください");
+    }
+
+    public function quit(Player $player){
+        parent::quit($player);
     }
 
     public function addKillPoint(int $team, int $amount = 1){

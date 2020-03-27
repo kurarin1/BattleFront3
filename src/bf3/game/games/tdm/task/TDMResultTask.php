@@ -23,7 +23,7 @@ class TDMResultTask extends TDMTask
                 Server::getInstance()->broadcastTitle("§l§9YOU LOSE...", "敗北...", 0, 20, 10, $this->game->getTeamPlayers(abs($winTeam - 1)));
                 break;
 
-            case 3:
+            case 5:
                 $this->game->TimeTable();
                 $this->getHandler()->cancel();
                 break;
