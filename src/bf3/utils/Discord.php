@@ -6,13 +6,13 @@ use bf3\BattleFront3;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 
-class Discord
+class Discord//Bot完成次第このクラスは削除
 {
 
     const WEBHOOK_SERVER_CHAT = "https://discordapp.com/api/webhooks/541650717698687016/3m5GunFfaoU08ifnSDwsSZB48VkkyxwsNwNAf_h0BSVkRAPku95mZ_bn9kPLNoW_cC1Y";
     const WEBHOOK_GAMEINFO = "https://discordapp.com/api/webhooks/551401135555084288/BsDN4Qn8HtOKJfMTTDjWto1VZ2k6StXs5IfAJsvjlzFVMVNoN-jzQWIKTJNWolqfRXcW";
 
-    public static function sendMessage(string $url, string $name, string $message, bool $async = true){//後で修正//todo
+    public static function sendMessage(string $url, string $name, string $message, bool $async = true){//後で修正
         if(BattleFront3::DEBUG) return;
 
         if($async){
