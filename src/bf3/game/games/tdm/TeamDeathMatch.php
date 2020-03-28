@@ -39,7 +39,7 @@ class TeamDeathMatch extends Game
 
     const HP = 100;
 
-    const TIME = 60 * 0.5;
+    const TIME = 1;
 
     const MAX_KILL = 1;
 
@@ -107,7 +107,11 @@ class TeamDeathMatch extends Game
             case 1:
                 $this->broadcastTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
                 $this->broadcastSound("random.totem", 1.5);
-                BattleFront3::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new TDMResultTask($this), 30, 20);
+                foreach ($this->getAllBossBar() as $bossBar){
+                    $bossBar->setTitle("§l§3Game>>§f チームデスマッチ §3Stage>>§f " . $this->getMap()->getMapName() . " §3Time>>§f 試合終了");
+                    $bossBar->setPercentage(0);
+                }
+                BattleFront3::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new TDMResultTask($this), 50, 20);
                 break;
 
             case 2:
@@ -188,5 +192,16 @@ class TeamDeathMatch extends Game
     /* @return Player[]*/
     public function getTeamPlayers(int $team) : array {
         return $this->teamMembers[$team];
+    }
+
+    /* @return TDMBossBar[]*/
+    public function getAllBossBar() : array {
+        $bars = [];
+        foreach ($this->players as $player){
+            $bossbar = BossBarAPI::getInstance()->getBossBar($player);
+            if($bossbar instanceof TDMBossBar) $bars[] = $bossbar;
+        }
+
+        return $bars;
     }
 }
