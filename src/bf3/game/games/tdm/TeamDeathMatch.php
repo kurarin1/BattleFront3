@@ -13,6 +13,7 @@ use bf3\game\games\tdm\scoreboard\TDMScoreboard;
 use bf3\game\games\tdm\task\TDMGameTask;
 use bf3\game\games\tdm\task\TDMResultTask;
 use bf3\game\games\tdm\task\TDMTipTask;
+use bf3\utils\Discord;
 use bfguns\BFGuns;
 use bossbarapi\bossbar\BossBar;
 use bossbarapi\BossBarAPI;
@@ -40,7 +41,7 @@ class TeamDeathMatch extends Game
 
     const HP = 40;
 
-    const TIME = 60 * 99 + 59;
+    const TIME = 60 * 19;
 
     const MAX_KILL = 10;
 
@@ -81,6 +82,7 @@ class TeamDeathMatch extends Game
         parent::init();
         BattleFront3::getInstance()->getScheduler()->scheduleRepeatingTask(new TDMTipTask($this), 20);
         $this->TimeTable();
+        Discord::sendMessage(Discord::WEBHOOK_GAMEINFO, "BattleFront3", '**❗`' . $this->getName() . '`が開始されました ステージ：`' . $this->map->getMapName() . '` **(' . date("m/d H:i") . ')');
     }
 
     public function fin(){
@@ -98,6 +100,7 @@ class TeamDeathMatch extends Game
             BattleFront3::getInstance()->setHubSpawn($player);
         }
         $this->map->close();
+        Discord::sendMessage(Discord::WEBHOOK_GAMEINFO, "BattleFront3", '**❗`' . $this->getName() . '`が終了しました **(' . date("m/d H:i") . ')');
     }
 
     public function TimeTable(){
@@ -203,6 +206,7 @@ class TeamDeathMatch extends Game
 
         if($this->archieves[$player->getName()]["streak"] >= 3){
             $this->broadcastMessage("§l>>§r" . $player->getDisplayName() . "§rが" . $this->archieves[$player->getName()]["streak"] . "キルストリークを達成");
+            Discord::sendMessage(Discord::WEBHOOK_GAMEINFO, "BattleFront3", '**❗❗' . $player->getName() . 'が' . $this->archieves[$player->getName()]["streak"] . 'キルストリークを達成しました**');
         }
     }
 
@@ -218,6 +222,7 @@ class TeamDeathMatch extends Game
         if($killer instanceof Player){
             if($this->archieves[$player->getName()]["streak"] >= 3){
                 $this->broadcastMessage("§l>>§r" . $killer->getDisplayName() . "§rが" . $player->getDisplayName() . "§rの" . $this->archieves[$player->getName()]["streak"] . "キルストリークを阻止");
+                Discord::sendMessage(Discord::WEBHOOK_GAMEINFO, "BattleFront3", '**❗❗' . $killer->getName() . "§fが" . $player->getName() . "§fの" . $this->archieves[$player->getName()]["streak"] . 'キルストリークを阻止しました**');
             }
         }
 

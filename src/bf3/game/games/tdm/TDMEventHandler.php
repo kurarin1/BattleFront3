@@ -7,6 +7,7 @@ use bf3\game\GameEventHandler;
 use bf3\game\GameManager;
 use bf3\game\games\Game;
 use bf3\game\games\GameEventListener;
+use bf3\utils\Discord;
 use bfguns\event\EntityDamageByWeaponEvent;
 use pocketmine\block\Air;
 use pocketmine\entity\Effect;
@@ -58,6 +59,7 @@ class TDMEventHandler extends GameEventListener//普通にチームデスマッ�
 
                     $cause = $damageCause instanceof EntityDamageByWeaponEvent ? $damageCause->getWeapon()->getName() : "KILL";
                     $event->setDeathMessage("§c§l⚔§r§7[§f" . $killer->getDisplayName() . "§r§7]§8 ---> §7[§f" . $cause . "§r§7]§8 --->§7 [§r§f" . $player->getDisplayName() . "§r§7]§r");
+                    Discord::sendMessage(Discord::WEBHOOK_GAMEINFO, "BattleFront3", '⚔[' . $killer->getName() . '] ---> [§f' . $cause . ']---> [' . $player->getName() . ']');
                 }
             }
             $this->game->resetKillStreak($player, $killer);
