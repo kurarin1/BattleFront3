@@ -16,4 +16,10 @@ class LobbyScoreboard extends Scoreboard
         //$this->setLine(1,"§7-----------");
     }
 
+    public function onUpdate(int $currentTick)
+    {
+        /*$this->setLine(1, "Yaw:" . $this->owner->getYaw());
+        $this->setLine(2, "Pitch:" . $this->owner->getPitch());*/
+    }
+
 }

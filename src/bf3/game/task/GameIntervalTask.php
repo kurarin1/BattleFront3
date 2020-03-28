@@ -7,7 +7,7 @@ use pocketmine\scheduler\Task;
 
 class GameIntervalTask extends Task{
 
-    const INTERVAL = 3;
+    const INTERVAL = 1;
 
     private $i = 0;
 

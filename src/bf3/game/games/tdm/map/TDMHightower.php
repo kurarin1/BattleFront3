@@ -13,8 +13,8 @@ class TDMHightower extends TDMMap
     const TIME = 20000;
 
     const SPAWN_LOCATION = [
-        0 => [295, 30, 405, 180, 0],//x,y,z,yaw,pitch
-        1 => [295, 30, 264, 0, 0]
+        0 => [295, 30.5, 405, 180, 0],//x,y,z,yaw,pitch
+        1 => [295, 30.5, 264, 0, 0]
     ];
 
 }

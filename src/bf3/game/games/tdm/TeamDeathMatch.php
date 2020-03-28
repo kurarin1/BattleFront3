@@ -7,6 +7,7 @@ use bf3\game\GameManager;
 use bf3\game\games\Game;
 use bf3\game\games\tdm\bossbar\TDMBossBar;
 use bf3\game\games\tdm\map\TDMHightower;
+use bf3\game\games\tdm\map\TDMKingsRow;
 use bf3\game\games\tdm\map\TDMMap;
 use bf3\game\games\tdm\scoreboard\TDMScoreboard;
 use bf3\game\games\tdm\task\TDMGameTask;
@@ -25,6 +26,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\UUID;
 use scoreboardapi\scoreboard\Scoreboard;
+use scoreboardapi\ScoreboardAPI;
 
 class TeamDeathMatch extends Game
 {
@@ -37,13 +39,14 @@ class TeamDeathMatch extends Game
 
     const HP = 100;
 
-    const TIME = 60 * 1;
+    const TIME = 60 * 0.5;
 
     const MAX_KILL = 1;
 
     /* @var $maps string[]*/
     private static $maps = [
-        TDMHightower::MAP_ID => TDMHightower::class
+        TDMHightower::MAP_ID => TDMHightower::class,
+        TDMKingsRow::MAP_ID => TDMKingsRow::class,
     ];
 
     /* @var $TimeTableStatus int*/
@@ -155,6 +158,12 @@ class TeamDeathMatch extends Game
 
     public function addKillPoint(int $team, int $amount = 1){
         $this->killPoint[$team] += $amount;
+        foreach ($this->players as $player){
+            $scoreboard = ScoreboardAPI::getInstance()->getScoreboard($player);
+            if($scoreboard instanceof TDMScoreboard){
+                $scoreboard->updateScore();
+            }
+        }
         if($this->killPoint[$team] >= self::MAX_KILL && $this->TimeTableStatus === 0){
             $this->TimeTable();
         }
