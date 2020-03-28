@@ -16,9 +16,9 @@ class TDMScoreboard extends Scoreboard
         $tdm = GameManager::getGame();
         $this->setDisplayName("BattleFront§c3§f");
         $this->setLine(0,"     §3v0.1.0    ");
-        $this->setLine(2,"§7----------- ");
+        $this->setLine(2,"§7-----------");
         $this->setLine(3,"目標: 敵を殲滅せよ");
-        $this->setLine(4,"§7-----------");
+        $this->setLine(4,"§7----------- ");
         $this->setLine(5, "TEAM : §f" . $tdm->getMap()->getColoredTeamName($tdm->getTeam($player)));
         $this->updateScore();
     }

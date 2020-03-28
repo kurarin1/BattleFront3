@@ -22,10 +22,12 @@ use pocketmine\item\GoldenApple;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\item\LeatherCap;
+use pocketmine\item\Potion;
+use pocketmine\item\SplashPotion;
 use pocketmine\Player;
 use pocketmine\scheduler\ClosureTask;
 
-class TDMEventHandler extends GameEventListener
+class TDMEventHandler extends GameEventListener//普通にチームデスマッチクラスに統合すればいい気がしてきた。。。
 {
 
     /* @var $game TeamDeathMatch*/
@@ -40,21 +42,25 @@ class TDMEventHandler extends GameEventListener
 
     public function onPlayerDeath(PlayerDeathEvent $event){
         $player = $event->getPlayer();
+        $killer = null;
         if($this->game->isPlayer($player)){
-            $player->getInventory()->remove(Item::get(ItemIds::GOLDEN_APPLE, 0, 64));
+            $player->getInventory()->remove(Item::get(ItemIds::SPLASH_POTION, Potion::STRONG_HEALING, 64));
             $damageCause = $player->getLastDamageCause();
             if($damageCause instanceof EntityDamageByEntityEvent){
                 $killer = $damageCause->getDamager();
                 if($killer instanceof Player && $this->game->isPlayer($killer)){
                     $killerTeam = $this->game->getTeam($killer);
                     $playerTeam = $this->game->getTeam($player);
-                    $this->game->addKillPoint($killerTeam);
-                    $killer->getInventory()->addItem(new GoldenApple());
+                    $this->game->addKillPoint($killerTeam);//ここらへんも統合すれば良さげ
+                    $this->game->addKill($killer);
+                    $this->game->addDeath($player);
+                    $killer->getInventory()->addItem(Item::get(ItemIds::SPLASH_POTION, Potion::STRONG_HEALING, $this->game->getStreak($killer)));
 
                     $cause = $damageCause instanceof EntityDamageByWeaponEvent ? $damageCause->getWeapon()->getName() : "KILL";
                     $event->setDeathMessage("§c§l⚔§r§7[§f" . $killer->getDisplayName() . "§r§7]§8 ---> §7[§f" . $cause . "§r§7]§8 --->§7 [§r§f" . $player->getDisplayName() . "§r§7]§r");
                 }
             }
+            $this->game->resetKillStreak($player, $killer);
         }
     }
 

@@ -12,6 +12,7 @@ use bf3\game\games\tdm\map\TDMMap;
 use bf3\game\games\tdm\scoreboard\TDMScoreboard;
 use bf3\game\games\tdm\task\TDMGameTask;
 use bf3\game\games\tdm\task\TDMResultTask;
+use bf3\game\games\tdm\task\TDMTipTask;
 use bfguns\BFGuns;
 use bossbarapi\bossbar\BossBar;
 use bossbarapi\BossBarAPI;
@@ -37,11 +38,11 @@ class TeamDeathMatch extends Game
 
     const MIN_PLAYER = 1;
 
-    const HP = 100;
+    const HP = 40;
 
-    const TIME = 1;
+    const TIME = 60 * 99 + 59;
 
-    const MAX_KILL = 1;
+    const MAX_KILL = 10;
 
     /* @var $maps string[]*/
     private static $maps = [
@@ -69,11 +70,16 @@ class TeamDeathMatch extends Game
         0 => 0,
         1 => 0
     ];
+    /* @var $archieves array[]*/
+    private $archieves = [
+        //name => ["kill" => int, "death" => int, "streak" => int]
+    ];
 
     public function init(){
         $this->map = new self::$maps[array_rand(self::$maps)]();//マップ選択
         $this->map->getLevel()->setAutoSave(false);
         parent::init();
+        BattleFront3::getInstance()->getScheduler()->scheduleRepeatingTask(new TDMTipTask($this), 20);
         $this->TimeTable();
     }
 
@@ -81,6 +87,7 @@ class TeamDeathMatch extends Game
         foreach ($this->players as $player){
             unset($this->players[$player->getName()]);
             $player->removeAllEffects();
+            $player->sendTip("  ");//ステータス表示の削除
             BattleFront3::getInstance()->setHubBossBar($player);
             BattleFront3::getInstance()->setHubScoreboard($player);
             BattleFront3::getInstance()->gotoHub($player);
@@ -129,6 +136,7 @@ class TeamDeathMatch extends Game
             $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
             $this->teamIndex[$player->getName()] = $team;
             $this->players[$player->getName()] = $player;
+            $this->archieves[$player->getName()] = ["kill" => 0, "death" => 0, "streak" => 0];
         }
         $this->teamMembers[$team][$player->getName()] = $player;
 
@@ -187,6 +195,41 @@ class TeamDeathMatch extends Game
 
     public function getMap() : TDMMap{
         return $this->map;
+    }
+
+    public function addKill(Player $player){
+        $this->archieves[$player->getName()]["kill"]++;
+        $this->archieves[$player->getName()]["streak"]++;
+
+        if($this->archieves[$player->getName()]["streak"] >= 3){
+            $this->broadcastMessage("§l>>§r" . $player->getDisplayName() . "§rが" . $this->archieves[$player->getName()]["streak"] . "キルストリークを達成");
+        }
+    }
+
+    public function getKill(Player $player) : int{
+        return $this->archieves[$player->getName()]["kill"];
+    }
+
+    public function addDeath(Player $player){
+        $this->archieves[$player->getName()]["death"]++;
+    }
+
+    public function  resetKillStreak(Player $player, ?Player $killer = null){
+        if($killer instanceof Player){
+            if($this->archieves[$player->getName()]["streak"] >= 3){
+                $this->broadcastMessage("§l>>§r" . $killer->getDisplayName() . "§rが" . $player->getDisplayName() . "§rの" . $this->archieves[$player->getName()]["streak"] . "キルストリークを阻止");
+            }
+        }
+
+        $this->archieves[$player->getName()]["streak"] = 0;
+    }
+
+    public function getDeath(Player $player) : int{
+        return $this->archieves[$player->getName()]["death"];
+    }
+
+    public function getStreak(Player $player) : int{
+        return $this->archieves[$player->getName()]["streak"];
     }
 
     /* @return Player[]*/
