@@ -41,9 +41,9 @@ class TeamDeathMatch extends Game
 
     const HP = 40;
 
-    const TIME = 60 * 19;
+    const TIME = 60 * 5;
 
-    const MAX_KILL = 10;
+    const MAX_KILL = 30;
 
     /* @var $maps string[]*/
     private static $maps = [
@@ -138,9 +138,9 @@ class TeamDeathMatch extends Game
         else{//新規参加
             $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
             $this->teamIndex[$player->getName()] = $team;
-            $this->players[$player->getName()] = $player;
             $this->archieves[$player->getName()] = ["kill" => 0, "death" => 0, "streak" => 0];
         }
+        $this->players[$player->getName()] = $player;
         $this->teamMembers[$team][$player->getName()] = $player;
 
         TDMBossBar::create($player);
@@ -160,14 +160,19 @@ class TeamDeathMatch extends Game
         $cap->setCustomColor($this->map->getTeamRGB($team));
         $player->getArmorInventory()->setHelmet($cap);
 
-        $gun = BFGuns::getWeaponManager()->getWeapon("Effexor")->getItem();
+        $gun = BFGuns::getWeaponManager()->getWeapon("AR01")->getItem();
         (new PlayerItemHeldEvent($player, $gun, 0))->call();
         $player->getInventory()->addItem($gun);
+        $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SMG01")->getItem());
+        $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SG01")->getItem());
+        $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SR01")->getItem());
+        $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("HG01")->getItem());
 
         $player->sendMessage("§l§aGAME>>§r§fあなたは" . $this->map->getColoredTeamName($team) . "チームです、敵を殲滅してください");
     }
 
     public function quit(Player $player){
+        unset($this->teamMembers[$this->getTeam($player)][$player->getName()]);
         parent::quit($player);
     }
 
