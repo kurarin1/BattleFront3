@@ -1,10 +1,10 @@
 <?php
 
-namespace bf3\utils;
+namespace bf3\hub;
 
 use bossbarapi\bossbar\BossBar;
 
-class LobbyBossBar extends BossBar
+class HubBossBar extends BossBar
 {
 
     const TIPS = ["Tips：このサーバーは開発段階です...", "§bTwitter§f：@MinecraftBF3", "§9Discord§f：https://discord.gg/KbHHdJa"];

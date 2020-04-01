@@ -1,11 +1,11 @@
 <?php
 
-namespace bf3\utils;
+namespace bf3\hub;
 
 use pocketmine\Player;
 use scoreboardapi\scoreboard\Scoreboard;
 
-class LobbyScoreboard extends Scoreboard
+class HubScoreboard extends Scoreboard
 {
 
     public function __construct(Player $player)

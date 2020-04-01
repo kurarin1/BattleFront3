@@ -13,6 +13,8 @@ use bf3\game\games\tdm\scoreboard\TDMScoreboard;
 use bf3\game\games\tdm\task\TDMGameTask;
 use bf3\game\games\tdm\task\TDMResultTask;
 use bf3\game\games\tdm\task\TDMTipTask;
+use bf3\hub\HubBossBar;
+use bf3\hub\HubScoreboard;
 use bf3\utils\Discord;
 use bfguns\BFGuns;
 use bossbarapi\bossbar\BossBar;
@@ -43,7 +45,7 @@ class TeamDeathMatch extends Game
 
     const TIME = 60 * 5;
 
-    const MAX_KILL = 30;
+    const MAX_KILL = 10;
 
     /* @var $maps string[]*/
     private static $maps = [
@@ -90,8 +92,8 @@ class TeamDeathMatch extends Game
             unset($this->players[$player->getName()]);
             $player->removeAllEffects();
             $player->sendTip("  ");//ステータス表示の削除
-            BattleFront3::getInstance()->setHubBossBar($player);
-            BattleFront3::getInstance()->setHubScoreboard($player);
+            HubBossBar::create($player);
+            HubScoreboard::create($player);
             BattleFront3::getInstance()->gotoHub($player);
             BattleFront3::getInstance()->setHubHealth($player);
             BattleFront3::getInstance()->setHubFood($player);
@@ -151,6 +153,7 @@ class TeamDeathMatch extends Game
         $player->setSpawn($this->map->getSpawnLocation($team));
         $player->setMaxHealth(self::HP);
         $player->setHealth(self::HP);
+        $player->removeAllEffects();
         $player->setNameTag($this->map->getTeamColorCode($team) . $player->getName() . "§r§f");
         $player->setDisplayName($this->map->getTeamColorCode($team) . $player->getName() . "§r§f");
         $player->getArmorInventory()->setContents([]);
