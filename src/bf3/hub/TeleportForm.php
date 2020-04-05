@@ -5,8 +5,10 @@ namespace bf3\hub;
 use bf3\BattleFront3;
 use bf3\game\GameManager;
 use bf3\utils\Utils;
+use bfguns\BFGuns;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\form\Form;
 use pocketmine\form\FormValidationException;
 use pocketmine\level\Location;
@@ -38,10 +40,18 @@ class TeleportForm implements Form
 
             case 0:
                 $player->teleport(BattleFront3::getInstance()->getHubLevel()->getSpawnLocation());
+                BattleFront3::getInstance()->setHubInventory($player);
                 break;
 
             case 1:
                 $player->teleport(new Location(343, 22, 342, 180, 0, BattleFront3::getInstance()->getHubLevel()));
+                $gun = BFGuns::getWeaponManager()->getWeapon("AR01")->getItem();
+                (new PlayerItemHeldEvent($player, $gun, 0))->call();
+                $player->getInventory()->addItem($gun);
+                $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SMG01")->getItem());
+                $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SG01")->getItem());
+                $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("SR01")->getItem());
+                $player->getInventory()->addItem(BFGuns::getWeaponManager()->getWeapon("HG01")->getItem());
                 break;
 
         }

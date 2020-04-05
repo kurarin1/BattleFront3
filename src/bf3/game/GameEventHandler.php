@@ -12,7 +12,7 @@ use pocketmine\event\player\PlayerRespawnEvent;
 class GameEventHandler implements Listener{
 
     /**
-     * @priority LOW
+     * @priority NORMAL
      * @param PlayerQuitEvent $event
      */
     public function onQuit(PlayerQuitEvent $event){
@@ -22,7 +22,7 @@ class GameEventHandler implements Listener{
     }
 
     /**
-     * @priority LOW
+     * @priority NORMAL
      * @param EntityArmorChangeEvent $event
      */
     public function onArmorChange(EntityArmorChangeEvent $event){
@@ -32,7 +32,7 @@ class GameEventHandler implements Listener{
     }
 
     /**
-     * @priority LOW
+     * @priority NORMAL
      * @param PlayerDeathEvent $event
      */
     public function onPlayerDeath(PlayerDeathEvent $event){
@@ -42,7 +42,7 @@ class GameEventHandler implements Listener{
     }
 
     /**
-     * @priority LOW
+     * @priority NORMAL
      * @param EntityDamageEvent $event
      */
     public function onDamage(EntityDamageEvent $event){
@@ -52,7 +52,7 @@ class GameEventHandler implements Listener{
     }
 
     /**
-     * @priority LOW
+     * @priority NORMAL
      * @param PlayerRespawnEvent $event
      */
     public function onRespawn(PlayerRespawnEvent $event){

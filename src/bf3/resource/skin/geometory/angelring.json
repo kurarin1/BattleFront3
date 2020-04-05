@@ -1,0 +1,93 @@
+{
+	"geometry.angelring": {
+		"texturewidth": 128,
+		"textureheight": 128,
+		"visible_bounds_width": 2,
+		"visible_bounds_height": 1,
+		"visible_bounds_offset": [0, 0.5, 0],
+		"bones": [
+			{
+				"name": "body",
+				"pivot": [0, 24, 0]
+			},
+			{
+				"name": "bone1",
+				"parent": "body",
+				"pivot": [0, 0, 0],
+				"rotation": [0, -45, 0],
+				"cubes": [
+					{"origin": [-1, 0, 3], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [-1, 0, -4], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [3, 0, -1], "size": [1, 1, 2], "uv": [0, 0]},
+					{"origin": [-4, 0, -1], "size": [1, 1, 2], "uv": [0, 0]}
+				]
+			},
+			{
+				"name": "bone2",
+				"parent": "body",
+				"pivot": [0, 24, 0],
+				"cubes": [
+					{"origin": [-1, 0, 3], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [-1, 0, -4], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [3, 0, -1], "size": [1, 1, 2], "uv": [0, 0]},
+					{"origin": [-4, 0, -1], "size": [1, 1, 2], "uv": [0, 0]}
+				]
+			},
+			{
+				"name": "bone3",
+				"parent": "body",
+				"pivot": [0, 24, 0],
+				"rotation": [0, -25, 0],
+				"cubes": [
+					{"origin": [-1, 0, 3], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [-1, 0, -4], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [3, 0, -1], "size": [1, 1, 2], "uv": [0, 0]},
+					{"origin": [-4, 0, -1], "size": [1, 1, 2], "uv": [0, 0]}
+				]
+			},
+			{
+				"name": "bone4",
+				"parent": "body",
+				"pivot": [0, 24, 0],
+				"rotation": [0, 25, 0],
+				"cubes": [
+					{"origin": [-1, 0, 3], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [-1, 0, -4], "size": [2, 1, 1], "uv": [0, 0]},
+					{"origin": [3, 0, -1], "size": [1, 1, 2], "uv": [0, 0]},
+					{"origin": [-4, 0, -1], "size": [1, 1, 2], "uv": [0, 0]}
+				]
+			},
+			{
+				"name": "waist",
+				"pivot": [0, 12, 0]
+			},
+			{
+				"name": "head",
+				"pivot": [0, 24, 0]
+			},
+			{
+				"name": "hat",
+				"parent": "head",
+				"pivot": [0, 24, 0]
+			},
+			{
+				"name": "rightArm",
+				"pivot": [-5, 22, 0]
+			},
+			{
+				"name": "leftArm",
+				"pivot": [5, 22, 0],
+				"mirror": true
+			},
+			{
+				"name": "rightLeg",
+				"pivot": [-1.9, 12, 0]
+			},
+			{
+				"name": "leftLeg",
+				"pivot": [1.9, 12, 0],
+				"mirror": true
+			}
+		]
+	}
+}
